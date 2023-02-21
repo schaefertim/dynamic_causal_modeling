@@ -1,8 +1,8 @@
-function run_spm_fx_cmc_2014
+% function run_spm_fx_cmc_2014
 % Test run canonical microcircuit
 %
-% Code copied from spm_dcm_Granger_asymmetry_demo.
- 
+% Code copied from spm_dcm_Granger_asymmetry_demo and then modified.
+
 % Model specification
 %==========================================================================
 rng('default')
@@ -15,9 +15,10 @@ ns    = 2*96;                                   % sampling frequency
 dt    = 1/ns;                                    % time bins
 Hz    = 1:(ns/2);                                % frequency
 p     = 16;                                      % autoregression order
+options = struct();
 options.spatial  = 'LFP';                        % level field potentials
 options.model    = 'CMC';                        % canonical microcircuit
-options.analysis = 'CSD';                        % Cross spectral density
+% options.analysis = 'CSD';                        % Cross spectral density
 M.dipfit.model = options.model;
 M.dipfit.type  = options.spatial;
 M.dipfit.Nc    = Nc;
@@ -58,7 +59,7 @@ nx    = length(spm_vec(x));
  
 % create forward model
 %--------------------------------------------------------------------------
-M.f   = 'spm_fx_cmc';
+M.f   = 'spm_fx_cmc_2014';
 M.g   = 'spm_gx_erp';
 M.x   = x;
 M.n   = nx;
@@ -76,6 +77,40 @@ M.u   = sparse(Ns,1);
 % solve for steady state
 %--------------------------------------------------------------------------
 M.x   = spm_dcm_neural_x(pE,M);
+
+
+%==========================================================================
+% my own plots
+%==========================================================================
+spm_figure('GetWin','Figure 1'); clf
+k     = linspace(-2,0,8);                       % log scaling range
+for j = 1:length(k)
+    % amplitude of observation noise
+    %----------------------------------------------------------------------
+    P        = pE;
+    P.G(1,:) = k(j);
+
+    % create forward model and solve for steady state
+    %----------------------------------------------------------------------
+    M.x = spm_dcm_neural_x(P,M);
+
+    [csd,freq] = spm_csd_mtf(P,M);
+    csd = csd{1};
+
+
+    spm_figure('GetWin','Figure 1');
+
+    subplot(1,1,1)
+    plot(freq, real(csd(:,1,1)));
+    xlabel('frequency')
+    ylabel('power')
+    title('Power spectrum','FontSize',16)
+    axis square, hold on, set(gca,'XLim',[0 Hz(end)])
+end
+
+%==========================================================================
+return
+%==========================================================================
 
 
 % evaluate expected Granger causality while changing intrinsic connectivity
