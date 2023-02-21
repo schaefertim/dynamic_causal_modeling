@@ -9,8 +9,8 @@ rng('default')
  
 % number of regions
 %--------------------------------------------------------------------------
-Nc    = 2;                                       % number of channels
-Ns    = 2;                                       % number of sources
+Nc    = 1;%2;                                       % number of channels
+Ns    = 1;%2;                                       % number of sources
 ns    = 2*96;                                   % sampling frequency
 dt    = 1/ns;                                    % time bins
 Hz    = 1:(ns/2);                                % frequency
@@ -23,15 +23,15 @@ M.dipfit.model = options.model;
 M.dipfit.type  = options.spatial;
 M.dipfit.Nc    = Nc;
 M.dipfit.Ns    = Ns;
-M.pF.D         = [1 4];                          % change conduction delays
+M.pF.D         = [1]; %[1 4];                          % change conduction delays
  
 % extrinsic connections (forward an backward)
 %--------------------------------------------------------------------------
-A{1} = [0 0; 0 0];
-A{2} = [0 0; 0 0];
-A{3} = [0 0; 0 0];
+A{1} = [0]; % 0; 0 0];
+A{2} = [0]; % 0; 0 0];
+A{3} = [0]; % 0; 0 0];
 B    = {};
-C    = sparse(2,0);
+C    = sparse(1,0); % sparse(2,0);
  
 % get priors
 %--------------------------------------------------------------------------
@@ -42,8 +42,8 @@ x     = spm_dcm_x_neural(pE,options.model);
 
 % (log) connectivity parameters
 %--------------------------------------------------------------------------
-pE.A{1}(2,1) = 2;                              % forward connections
-pE.A{3}(1,2) = 1;                              % backward connections
+% pE.A{1}(2,1) = 2;                              % forward connections
+% pE.A{3}(1,2) = 1;                              % backward connections
 pE.S         = 1/8;
 
 % (log) amplitude of fluctations and noise
