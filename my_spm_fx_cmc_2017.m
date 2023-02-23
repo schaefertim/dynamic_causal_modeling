@@ -45,7 +45,7 @@ n  = size(x,1);                       % number of sources
 % [default] fixed parameters
 %--------------------------------------------------------------------------
 E  = [1 1/8 1/4 1/2]*200;             % extrinsic (forward and backward)  
-G  = [4 4 8 4 4 2 4 4 2 2 2 4]*200;   % intrinsic connections
+G  = [4 4 8 4 4 2 4 4 2 2 2 4 4]*200;   % intrinsic connections
 T  = [2 2 16 28];                     % synaptic time constants
 R  = 1;                               % slope of sigmoid activation function
 
@@ -137,6 +137,7 @@ G    = ones(n,1)*G;
 % G(:,10) dp -> dp (-ve self)  2      -     ++    -    -
 % G(:,11) sp -> ii (+ve rec)   2      -     -     +++  +
 % G(:,12) ii -> sp (-ve rec)   4      -     -     +    ++
+% G(:,13) sp -> dp (+ve rec)   4      ?     ?     ?    ?
 %--------------------------------------------------------------------------
 % Neuronal states (deviations from baseline firing)
 %--------------------------------------------------------------------------
@@ -158,11 +159,13 @@ end
 if isfield(M,'cmcj')
     j = M.cmcj;
 else
-    j = [12 9 7 4 1 2 3 5 6 8 10 11];
+    % j = [12 9 7 4 1 2 3 5 6 8 10 11];
+    j = [12 9 7 4 1 13 3 5 6 8 10 11];
 end
 for i = 1:size(P.G,2)
    G(:,j(i)) = G(:,j(i)).*exp(P.G(:,i));
 end
+
 
 % Modulatory effects of dp depolarisation on intrinsic connection
 %--------------------------------------------------------------------------
@@ -180,7 +183,7 @@ end
 % Granular layer (excitatory interneurons): spiny stellate: Hidden causes
 %--------------------------------------------------------------------------
 u      =   A{1}*S(:,3) + U;
-u      = - G(:,1).*S(:,1) - G(:,3).*S(:,5) - G(:,2).*S(:,3) + u;
+u      = - G(:,1).*S(:,1) - G(:,3).*S(:,5) + u;
 f(:,2) =  (u - 2*x(:,2) - x(:,1)./T(:,1))./T(:,1);
  
 % Supra-granular layer (superficial pyramidal cells): Hidden causes - error
@@ -198,7 +201,7 @@ f(:,6) =  (u - 2*x(:,6) - x(:,5)./T(:,3))./T(:,3);
 % Infra-granular layer (deep pyramidal cells): Hidden states
 %--------------------------------------------------------------------------
 u      =   A{2}*S(:,3);
-u      = - G(:,10).*S(:,7) - G(:,9).*S(:,5) + u;
+u      = - G(:,10).*S(:,7) - G(:,9).*S(:,5) + G(:,13).*S(:,3) + u;
 f(:,8) =  (u - 2*x(:,8) - x(:,7)./T(:,4))./T(:,4);
  
 % Voltage
