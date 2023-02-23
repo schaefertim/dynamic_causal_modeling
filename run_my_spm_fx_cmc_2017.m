@@ -14,16 +14,16 @@ Ns    = 1;%2;                                       % number of sources
 ns    = 2*96;                                   % sampling frequency
 dt    = 1/ns;                                    % time bins
 Hz    = 1:(ns/2);                                % frequency
-p     = 16;                                      % autoregression order
+% p     = 16;                                      % autoregression order
 options = struct();
 options.spatial  = 'LFP';                        % level field potentials
 options.model    = 'CMC';                        % canonical microcircuit
 % options.analysis = 'CSD';                        % Cross spectral density
-M.dipfit.model = options.model;
-M.dipfit.type  = options.spatial;
-M.dipfit.Nc    = Nc;
-M.dipfit.Ns    = Ns;
-M.pF.D         = 1; %[1 4];                          % change conduction delays
+%M.dipfit.model = options.model;
+%M.dipfit.type  = options.spatial;
+%M.dipfit.Nc    = Nc;
+%M.dipfit.Ns    = Ns;
+M.pF.D         = [1 8]; %[1 4];                          % change conduction delays
  
 % extrinsic connections (forward an backward)
 %--------------------------------------------------------------------------
@@ -48,9 +48,9 @@ pE.S         = 1/8;
 
 % (log) amplitude of fluctations and noise
 %--------------------------------------------------------------------------
-pE.a(1,:) = -2;
-pE.b(1,:) = -8;
-pE.c(1,:) = -8;
+%pE.a(1,:) = -2;
+%pE.b(1,:) = -8;
+%pE.c(1,:) = -8;
 
  
 % orders and model
@@ -67,7 +67,7 @@ M.pE  = pE;
 M.m   = Ns;
 M.l   = Nc;
 M.Hz  = Hz;
-M.Rft = 4;
+% M.Rft = 4;
 
 
 % specify M.u - endogenous input (fluctuations) and intial states
@@ -82,9 +82,11 @@ M.x   = spm_dcm_neural_x(pE,M);
 %==========================================================================
 % my own plots
 %==========================================================================
-spm_figure('GetWin','Figure 1'); clf
-k     = linspace(-0.36,0,2);                       % log scaling range
-for j = 1:length(k)
+% spm_figure('GetWin','Figure 1'); clf
+n_param_step = 10;
+colors = colormap(jet(n_param_step));
+k     = linspace(0,-0.36,n_param_step);  % e^-0.36 = 0.7 (30% decrease)
+for j = 1:n_param_step
     for i_model = 1:5
         % amplitude of observation noise
         %----------------------------------------------------------------------
@@ -115,18 +117,22 @@ for j = 1:length(k)
         %----------------------------------------------------------------------
         M.x = spm_dcm_neural_x(P,M);
     
+        % M.u = sparse(1,size(pE.C,2));
         [csd,freq] = spm_csd_mtf(P,M);
         csd = csd{1};
-    
-    
-        spm_figure('GetWin','Figure 1');
+        psd = abs(csd(:,1,1));
+
+        % normalise like described in Adams et al., 2022, supplement, p.8
+        % subtract 1/f noise
+        b = robustfit(log(freq), log(psd));
+        psd_fit = exp(b(1) + b(2) * log(freq));
+        psd_normalised = log10(psd) - log10(psd_fit.');
     
         subplot(1,5,i_model)
-        plot(freq, real(csd(:,1,1)));
+        plot(freq, psd_normalised, 'Color', colors(j,:));
         xlabel('frequency')
-        ylabel('power')
+        ylabel('normalised power (AU)')
         title(sprintf('Model %d', i_model),'FontSize',16)
         axis square, hold on, set(gca,'XLim',[0 Hz(end)])
     end
-
 end
