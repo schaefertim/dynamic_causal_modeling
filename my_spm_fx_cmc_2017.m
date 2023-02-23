@@ -45,7 +45,8 @@ n  = size(x,1);                       % number of sources
 % [default] fixed parameters
 %--------------------------------------------------------------------------
 E  = [1 1/8 1/4 1/2]*200;             % extrinsic (forward and backward)  
-G  = [4 4 8 4 4 2 4 4 2 2 2 4 4]*200;   % intrinsic connections
+%G  = [4 4 8 4 4 2 4 4 2 2 2 4 4]*200;   % intrinsic connections
+G  = [4 NaN 4 4 4 2 4 4 2 1 4 4 4]*200;
 T  = [2 2 16 28];                     % synaptic time constants
 R  = 1;                               % slope of sigmoid activation function
 
