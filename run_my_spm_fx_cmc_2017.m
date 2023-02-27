@@ -73,23 +73,20 @@ for j = 1:n_param_step
 
         switch(i_model)
             case 1
-                P.G(1,1) = k(j);    % G12: ii->sp
-                P.G(1,2) = k(j);    % G9:  ii->dp
-                P.G(1,6) = k(j);    % G13: sp->dp
-                P.G(1,7) = k(j);    % G3:  ii->ss
-                P.G(1,8) = k(j);    % G5:  ss->ii
-                P.G(1,9) = k(j);    % G6:  dp->ii
-                P.G(1,10) = k(j);   % G8:  ss->sp
-                P.G(1,12) = k(j);   % G11: sp->ii
-            case 2        
-                P.G(1,9) = k(j);    % G6:  dp->ii
-                P.G(1,12) = k(j);   % G11: sp->ii
+                M.cmcj = [3 5 6 8 9 11 12 13];
+                P.G = ones(1,8) * k(j);
+            case 2
+                M.cmcj = [6 11];
+                P.G = ones(1,2) * k(j);
             case 3
-                P.G(1,4) = k(j);    % G4:  ii->ii
+                M.cmcj = 4;
+                P.G = k(j);
             case 4
-                P.G(1,4) = -k(j);   % G4:  ii->ii
+                M.cmcj = 4;
+                P.G = -k(j);
             case 5
-                P.G(1,3) = -k(j);   % G7:  sp->sp
+                M.cmcj = 7;
+                P.G = k(j);
         end
 
         % create forward model and solve for steady state
