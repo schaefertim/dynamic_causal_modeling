@@ -36,7 +36,7 @@ try M.cmcj = j;  end
      
 % hidden neuronal states of interest
 %--------------------------------------------------------------------------
-[x,f]   = spm_dcm_x_neural(pE,M.dipfit.model);
+x   = spm_dcm_x_neural(pE,M.dipfit.model);
  
 % orders and model
 %==========================================================================
@@ -46,7 +46,7 @@ u       = sparse(1,nu);
  
 % create LFP model
 %--------------------------------------------------------------------------
-M.f     = f;
+M.f     = 'spm_fx_cmc_2017_constG';
 M.g     = 'spm_gx_erp';
 M.x     = x;
 M.n     = nx;
@@ -127,7 +127,7 @@ if syn_chng_group ~= 0
     end
     
     % set colours - remove darkest ones from ends and lightest from middle
-    [colormap]=cbrewer('div', 'RdBu', size(GW,2)+6); colormap = colormap([2:6 11:15],:);
+    [colormap]=cbrewer2('div', 'RdBu', size(GW,2)+6); colormap = colormap([2:6 11:15],:);
     
     % plot
     for l = [2:size(GW,2)-1 size(GW,2) 1] % ensure end plots are on top
