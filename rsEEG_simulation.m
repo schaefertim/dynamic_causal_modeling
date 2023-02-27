@@ -51,8 +51,8 @@ spmpath = '/Users/rickadams/Code/SPM/spm12_v7219'; % v7219
 funpath = '/Users/rickadams/Dropbox/Downloaded_functions';
 Dimpath = '/Users/rickadams/Dropbox/Rick/Academic/Anticevic/codeDimitrisSSAEP40_v2';
 
-addpath(cmcpath, spmpath)
-addpath(genpath(funpath))
+%addpath(cmcpath, spmpath)
+%addpath(genpath(funpath))
 % addpath(Dimpath)        % NB will simulate SSAEP40 i.e. stimulation at 40 Hz
 % rmpath(Dimpath)           % will simulate resting state (normal SPM version)
 spm('defaults', 'eeg');
