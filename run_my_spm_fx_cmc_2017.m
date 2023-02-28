@@ -86,7 +86,7 @@ for j = 1:n_param_step
                 P.G = -k(j);
             case 5
                 M.cmcj = 7;
-                P.G = k(j);
+                P.G = -k(j);
         end
 
         % create forward model and solve for steady state
