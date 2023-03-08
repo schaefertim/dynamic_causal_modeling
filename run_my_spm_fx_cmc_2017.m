@@ -4,7 +4,7 @@
 % Code copied from run_spm_fx_cmc_2014 and then modified.
 
 addpath('dynamic_causal_modeling/')
-addpath('cbrewer2/cbrewer2/')
+addpath('cbrewer2/cbrewer2/'); addpath('28790/colorspace/');
 % spm default
 spm('defaults', 'eeg')
 
@@ -45,7 +45,7 @@ M.n   = length(spm_vec(x));
 M.pE  = pE;
 M.m   = Ns;
 M.l   = Nc;
-M.Hz  = 2:96;
+M.Hz  = 4:96;
 
 % specify M.u - endogenous input (fluctuations) and intial states
 %--------------------------------------------------------------------------
@@ -117,6 +117,7 @@ for j = 1:n_param_step
 
         subplot(2,5,i_model+5)
         plot(freq, psd, 'Color', colormap(j,:));
+        plot(freq, psd_fit, 'Color', colormap(j,:));
         xlabel('frequency')
         ylabel('power')
         set(gca, 'YScale', 'log')
