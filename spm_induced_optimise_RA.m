@@ -36,7 +36,7 @@ try M.cmcj = j;  end
      
 % hidden neuronal states of interest
 %--------------------------------------------------------------------------
-x   = spm_dcm_x_neural(pE,M.dipfit.model);
+[x,f]   = spm_dcm_x_neural(pE,M.dipfit.model);
  
 % orders and model
 %==========================================================================
@@ -46,7 +46,7 @@ u       = sparse(1,nu);
  
 % create LFP model
 %--------------------------------------------------------------------------
-M.f     = 'spm_fx_cmc_2017_constG';
+M.f     = f;
 M.g     = 'spm_gx_erp';
 M.x     = x;
 M.n     = nx;
