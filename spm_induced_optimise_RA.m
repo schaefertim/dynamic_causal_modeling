@@ -46,7 +46,7 @@ u       = sparse(1,nu);
  
 % create LFP model
 %--------------------------------------------------------------------------
-M.f     = f;
+M.f     = 'spm_fx_cmc_2017_constG';
 M.g     = 'spm_gx_erp';
 M.x     = x;
 M.n     = nx;
@@ -117,7 +117,7 @@ if syn_chng_group ~= 0
     %----------------------------------------------------------
     
     % compute and plot normalised (pre-whitened) data
-    subplot(1,5,pl)
+    subplot(2,5,pl)
     for gw = 1:size(GW,2)
         try % fit gradient+intercept to log-log plot and subtract them
             [robfit] = robustfit(log10(w),log10(abs(GW(:,gw))),'bisquare');
@@ -147,6 +147,13 @@ if syn_chng_group ~= 0
     xticks([0 20 40 60 80]); yticks([-0.2 -0.1 0 0.1 0.2 0.3 0.4 0.5])
     set(gca,'FontSize',12)
     
+    subplot(2,5,pl+5)
+    for gw = 1:size(GW,2)
+        plot(w, abs(GW(:,gw)),'Color',colormap(gw,:)); hold on
+    end
+    set(gca, 'YScale', 'log')
+    set(gca, 'XScale', 'log')
+
 else % previous version (change params individually)
     
     for k = 1:length(P)

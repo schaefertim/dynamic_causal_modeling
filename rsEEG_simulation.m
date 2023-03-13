@@ -51,6 +51,9 @@ spmpath = '/Users/rickadams/Code/SPM/spm12_v7219'; % v7219
 funpath = '/Users/rickadams/Dropbox/Downloaded_functions';
 Dimpath = '/Users/rickadams/Dropbox/Rick/Academic/Anticevic/codeDimitrisSSAEP40_v2';
 
+spm_7219_path = 'spm12';%'spm12_github';%'spm12_v7219';
+addpath(spm_7219_path)
+
 %addpath(cmcpath, spmpath)
 %addpath(genpath(funpath))
 % addpath(Dimpath)        % NB will simulate SSAEP40 i.e. stimulation at 40 Hz
@@ -99,6 +102,7 @@ for sim = 1:5 % 5 models: each 'j' refers to a microcircuit connection (see
 % -------------------------------------------------------------------------
 pF.D(1) = 1;                    % intrinsic delays (ms) 
 pF.D(2) = 8;                    % extrinsic delays (ms)
+M.nodelay = 0;
  
 % number of regions in coupled map lattice (only one for rsEEG simulation)
 M.dipfit.Nc     = Nc;    % no of channels

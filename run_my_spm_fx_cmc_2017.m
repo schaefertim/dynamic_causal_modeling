@@ -24,6 +24,7 @@ M.dipfit.type  = options.spatial;
 M.dipfit.Nc    = Nc;
 M.dipfit.Ns    = Ns;
 M.pF.D         = [1 8];                          % change conduction delays
+M.nodelay      = 0;
 
 % get priors
 %--------------------------------------------------------------------------
