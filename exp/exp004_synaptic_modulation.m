@@ -67,9 +67,11 @@ for flag_dataset=1:2
         subplot(1,2,1)
         plot(freq,psd)
         set(gca,'YScale','log','XScale','log')
+        ylabel('power'), xlabel('frequency')
         hold on
         subplot(1,2,2)
         plot(freq,psd_normalised)
+        xlabel('frequency'), ylabel('normalized power')
         hold on
     
         % save to table
@@ -84,8 +86,8 @@ for flag_dataset=1:2
     table_result = splitvars(table_result);
     display(table_result);
     if flag_dataset==1
-        writetable(table_result, 'dynamic_causal_modeling/results/result_measured.txt')
+        writetable(table_result, 'dynamic_causal_modeling/results/result_measured.txt', 'Delimiter', 'tab')
     else
-        writetable(table_result, 'dynamic_causal_modeling/results/result_predicted.txt')
+        writetable(table_result, 'dynamic_causal_modeling/results/result_predicted.txt','Delimiter','tab')
     end
 end
