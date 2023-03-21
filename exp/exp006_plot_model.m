@@ -50,3 +50,11 @@ title('Relative power in model')
 xlabel("Synaptic gain modulation factor"), ylabel("relative power");
 legend(freq_bands)
 shg
+
+% create and save table
+table_save = table;
+table_save.synModulation = reshape(synapticDensity,[],1);
+for i_freq_band=1:numel(freq_bands)
+    table_save.(freq_bands{i_freq_band}) = power_rel(:,i_freq_band);
+end
+writetable(table_save, 'dynamic_causal_modeling/results/model_simulation.txt', 'Delimiter', 'tab')
