@@ -31,29 +31,30 @@ del labels_EEG, labels_model
 # %% plot quantities against each other
 fig, axs = plt.subplots(
     ncols=len(labels_common),
-    nrows=len(frequencies) - 1,
     sharex="all",
     sharey="all",
-    figsize=(10, 10),
+    figsize=(10, 3),
     constrained_layout=True,
 )
 fig.suptitle("Relative power comparison")
 for i_donor, donor in enumerate(labels_common):
-    axs[0, i_donor].set_title(donor)
-    axs[-1, i_donor].set_xlabel("rel. power\nmodel")
+    axs[i_donor].set_title(donor)
+    axs[i_donor].set_xlabel("rel. power\nmodel")
     for i_frequ, frequ in enumerate(frequencies[:-1]):
         EEG_measured_reduced = EEG_measured[
             (EEG_measured["donor"] == donor) &
             (EEG_measured["relative"] == True)  # noqa: E712
         ]
-        ax = axs[i_frequ, i_donor]
+        ax = axs[i_donor]
         ax.plot([0, 1], [0, 1], linestyle="--", color="black")
         ax.errorbar(
             model_measured.loc[model_measured["donor"] == donor, f"relPower_{frequ}"],
             EEG_measured_reduced[frequ[0].upper()+frequ[1:]].mean(),
             yerr=EEG_measured_reduced[frequ[0].upper()+frequ[1:]].std(),
             marker='x',
+            label=frequ,
         )
         if i_donor == 0:
-            ax.set_ylabel(f"{frequ}\nrel. power\nmeasured")
+            ax.set_ylabel(f"rel. power\nmeasured")
+axs[-1].legend(bbox_to_anchor=(1.1, 1.05))
 fig.show()
