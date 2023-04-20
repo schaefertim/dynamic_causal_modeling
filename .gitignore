@@ -1,3 +1,14 @@
 # matlab binaries
 *.asv
 
+# pyCharm
+.idea/
+
+# plots
+plots/
+
+# data
+data/
+
+# results
+results/
