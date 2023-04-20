@@ -52,9 +52,13 @@ legend(freq_bands)
 shg
 
 % create and save table
-table_save = table;
-table_save.synModulation = reshape(synapticDensity,[],1);
+table_save_rel = table;
+table_save_abs = table;
+table_save_rel.synModulation = reshape(synapticDensity,[],1);
+table_save_abs.synModulation = reshape(synapticDensity,[],1);
 for i_freq_band=1:numel(freq_bands)
-    table_save.(freq_bands{i_freq_band}) = power_rel(:,i_freq_band);
+    table_save_rel.(freq_bands{i_freq_band}) = power_rel(:,i_freq_band);
+    table_save_abs.(freq_bands{i_freq_band}) = power_abs(:,i_freq_band);
 end
-writetable(table_save, 'dynamic_causal_modeling/results/model_simulation.txt', 'Delimiter', 'tab')
+writetable(table_save_rel, 'dynamic_causal_modeling/results/exp006_model_simulation_rel.txt', 'Delimiter', 'tab')
+writetable(table_save_abs, 'dynamic_causal_modeling/results/exp006_model_simulation_abs.txt', 'Delimiter', 'tab')

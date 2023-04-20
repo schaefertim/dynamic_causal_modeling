@@ -82,3 +82,23 @@ for path_EEG, title in zip(paths_EEG, titles):
     axs[0].legend(handles=[handle_patient, handle_model])
     axs[-1].set_xlabel("synaptic modulation/synaptic density")
     fig.show()
+
+# plot only model
+fig, axs = plt.subplots(
+    nrows=len(frequencies[:-1]),
+    sharex="all",
+    figsize=(7, 10),
+    constrained_layout=True,
+)
+for i_frequ, frequ in enumerate(frequencies[:-1]):
+    ax = axs[i_frequ]
+    handle_model, = ax.plot(
+        df_simulation["synModulation"],
+        df_simulation[frequ],
+        color="tab:blue",
+        label="model",
+    )
+    ax.set_ylabel(f"{frequ}\nrel. power")
+axs[0].legend(handles=[handle_model, ])
+axs[-1].set_xlabel("synaptic modulation/synaptic density")
+fig.show()
