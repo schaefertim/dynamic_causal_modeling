@@ -28,6 +28,11 @@ folder for saving the plots
 
 
 # Pipeline
+1. `exp010_create_lookup_table.m` - run different models and create lookup tables.
+2. `exp011_predict_data.py` - predict the relative power from the synaptic density data using the lookup tables.
+
+### Old
+works only for model `'all-excitatory'`
 1. `exp006_plot_model.m` - run the model for different synaptic gain values and create lookup tables.
 2. compute absolute and relative power (script based on which dataset is used):
    - `exp008_abs_rel_power_data.py`
