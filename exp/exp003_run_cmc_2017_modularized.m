@@ -20,13 +20,17 @@ colormap = cbrewer2('div', 'RdBu', n_param_step+6);
 colormap = colormap([2:n_param_step/2+1 n_param_step/2+6:n_param_step+6],:);
 k     = linspace(log(0.7),0,n_param_step);  % e^-0.36 = 0.7 (30% decrease)
 for j = 1:n_param_step
-    for i_model = 1:5
+    for i_model = 1:6
         P        = pE;
-        [M,P] = modify_cmc_2017(M,P,i_model,k(j));
+        if i_model == 6
+            [M,P] = modify_cmc_2017(M,P,'all-excitatory',k(j));
+        else
+            [M,P] = modify_cmc_2017(M,P,i_model,k(j));
+        end
         [freq, psd, psd_normalised, psd_fit] = spm_get_power_spectrum_and_normalization(M,P);
     
         %plot
-        subplot(2,5,i_model)
+        subplot(3,6,i_model)
         plot(freq,psd_normalised,'Color',colormap(j,:));
         xlabel('frequency')
         ylabel('normalised power (AU)')
@@ -34,13 +38,23 @@ for j = 1:n_param_step
         title(sprintf('Model %d', i_model),'FontSize',16)
         axis square, hold on, set(gca,'XLim',[0 M.Hz(end)])
 
-        subplot(2,5,i_model+5)
+        subplot(3,6,i_model+6)
         plot(freq, psd, 'Color', colormap(j,:));
-        plot(freq, psd_fit, 'Color', colormap(j,:));
+        % plot(freq, psd_fit, 'Color', colormap(j,:));
         xlabel('frequency')
         ylabel('power')
         set(gca, 'YScale', 'log')
-        set(gca, 'XScale', 'log')
+        % set(gca, 'XScale', 'log')
+        title(sprintf('Model %d', i_model),'FontSize',16)
+        axis square, hold on, set(gca,'XLim',[0 M.Hz(end)])
+
+        subplot(3,6,i_model+ 2*6)
+        plot(freq, psd/sum(psd), 'Color', colormap(j,:));
+        % plot(freq, psd_fit, 'Color', colormap(j,:));
+        xlabel('frequency')
+        ylabel('relative power')
+        set(gca, 'YScale', 'log')
+        % set(gca, 'XScale', 'log')
         title(sprintf('Model %d', i_model),'FontSize',16)
         axis square, hold on, set(gca,'XLim',[0 M.Hz(end)])
     end
