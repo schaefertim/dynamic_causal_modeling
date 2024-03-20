@@ -6,7 +6,7 @@ import pandas as pd
 # settings - change these to your needs!
 data_path = "/home/tim/dynamic_causal_modeling/data"
 results_path = "/home/tim/dynamic_causal_modeling/results"
-synaptic_gain_rescaling_interval = (0.5, 1.5)
+synaptic_gain_rescaling_interval = (0.7, 1.0)  # (0.5, 1.5)
 
 # synaptic density data
 data = [
