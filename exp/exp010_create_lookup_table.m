@@ -25,6 +25,7 @@ for i_model=1:6
     model_string = string(i_model);
     power_abs = zeros(size(synapticDensity,2),size(freq_bands,1));
     power_rel = zeros(size(synapticDensity,2),size(freq_bands,1));
+    table_save_abs_all = table;
 
     % run model for each parameter
     for i_param=1:size(synapticDensity,2)
@@ -35,6 +36,8 @@ for i_model=1:6
 
         % compute power spectrum
         [freq, psd, psd_normalised, psd_fit] = spm_get_power_spectrum_and_normalization(M,P);
+        table_save_abs_all.freq = reshape(freq,[],1);
+        table_save_abs_all.(string(synapticDensity(i_param))) = psd(:, 1);
 
         % compute absolute power
         power_abs_norm = struct();
@@ -76,4 +79,5 @@ for i_model=1:6
     end
     writetable(table_save_rel, sprintf('dynamic_causal_modeling/results/exp010_model_%s_rel.txt', model_string), 'Delimiter', 'tab')
     writetable(table_save_abs, sprintf('dynamic_causal_modeling/results/exp010_model_%s_abs.txt', model_string), 'Delimiter', 'tab')
+    writetable(table_save_abs_all, sprintf('dynamic_causal_modeling/results/exp010_model_%s_abs_all.txt', model_string), 'Delimiter', 'tab')
 end
