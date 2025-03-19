@@ -15,6 +15,12 @@ i_model = 6
 # synaptic density data
 data = [
     {
+        "path_EEG": os.path.join(data_path, "MeasuredDensity_extended.txt"),
+        "title": "MeasuredDensity_extended",
+        "id_name": "gId",
+        "density_name": "Neurite_Syn1Area",
+    },
+    {
         "path_EEG": os.path.join(data_path, "Measured_Density_reprocessed.txt"),
         "title": "Measured_Density_reprocessed Neurite_Syn1Count",
         "id_name": "gId",
