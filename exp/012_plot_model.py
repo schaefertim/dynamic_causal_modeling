@@ -1,3 +1,6 @@
+"""
+Plots the spectral density prediction of the model for a range of synaptic densities.
+"""
 import os
 
 import pandas as pd

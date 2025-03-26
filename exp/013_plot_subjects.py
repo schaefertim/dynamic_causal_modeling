@@ -1,3 +1,12 @@
+"""
+Plots the spectral density prediction of the model for the subject-specific synaptic densities.
+
+Before this, 010_create_lookup_table.m must be run to generate a lookup table.
+Modify the data variable below to add new data.
+This script maps the synaptic densities to the interval [0.7, 1.0] for the synaptic gain.
+For each subject-specific synaptic gain the power spectral density values are looked up and plotted.
+Additionally, a histogram of the synaptic gain of the subjects is plotted.
+"""
 import os.path
 
 import numpy as np
@@ -12,8 +21,15 @@ fig_path = "/home/tim/dynamic_causal_modeling/plots"
 synaptic_gain_rescaling_interval = (0.7, 1.0)  # (0.5, 1.5)
 i_model = 6
 
+# --- MODIFY THE DATA HERE TO RUN NEW DATA ---
 # synaptic density data
 data = [
+    {
+        "path_EEG": os.path.join(data_path, "MeasuredDensity_extended_corrected240325.txt"),
+        "title": "MeasuredDensity_extended_corrected240325",
+        "id_name": "gId",
+        "density_name": "Neurite_Syn1Area",
+    },
     {
         "path_EEG": os.path.join(data_path, "MeasuredDensity_extended.txt"),
         "title": "MeasuredDensity_extended",

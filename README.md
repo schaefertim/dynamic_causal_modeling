@@ -14,13 +14,24 @@ If you use this code, please cite the following paper:
 	journal = {medRxiv}
 }
 ```
-# How to use
 
-## Folder structure
+# Model choice
+There is 6 models available for modulating the baseline canonical microcircuit model.
+- model 6 (`'all-excitatory'`) modulates all excitatory projections -> this is what we use 
+- model 1-5 are from Adams et al. (2022) modulating specific connections
+
+# Pipeline
+1. Put your raw data in `data/`. The data should be a csv file containing at least the following columns:
+   - subject identifier (`id` or `gId` or something you define)
+   - synaptic density value (`Neurite_Syn1Count` or `synDensity` or something you define)
+2. `010_create_lookup_table.m` - run different models and create lookup tables.
+3. `011_predict_data.py` - predict the relative power from the subject-specific synaptic density data (previously put in `data/`).
+4. `012_plot_model.py` (optional) - plot the model prediction of power spectral density for a range of synaptic densities.
+5. `013_plot_subjects.py` (optional) - plot the subject-specific power spectral density predictions.
+
+# Folder structure
 ### data/
-Put the raw data in this folder. This data should be a csv file with the following columns:
-- subject identifier (`id` or `gId` or something you define)
-- synaptic density value (`Neurite_Syn1Count` or `synDensity` or something you define)
+Contains your raw data with subjects and their synaptic densities.
 
 ### src/
 Contains the models and helper functions. Key modules:
@@ -37,47 +48,59 @@ empty folder where the results will be saved.
 ### plots/
 folder for saving the plots
 
-
-# Pipeline
-1. `exp010_create_lookup_table.m` - run different models and create lookup tables.
-2. `exp011_predict_data.py` - predict the relative power from the synaptic density data using the lookup tables.
-
-### Old
-works only for model `'all-excitatory'`
-1. `exp006_plot_model.m` - run the model for different synaptic gain values and create lookup tables.
-2. compute absolute and relative power (script based on which dataset is used):
-   - `exp008_abs_rel_power_data.py`
-   - `exp009_abs_rel_power_data.py`
-
 # Scripts
 
-### exp001_run_my_spm_fx_2017.m
+### 010_create_lookup_table.m
+This script generates a lookup table for a range of synaptic densities to later faster predict subject-specific model predictions t
+
+### 011_predict_data.py
+Computes a model prediction for each subject using the lookup table and subject-specific synaptic densities.
+
+### 012_plot_model.py
+Plots the spectral density prediction of the model for a range of synaptic densities.
+
+### 013_plot_subjects.py
+Plots the spectral density prediction of the model for the subject-specific synaptic densities.
+
+
+### 101_test_my_spm_fx_cmc_2017.m
 Test script for model. Run this to confirm it is working as intended.
 
-### exp002_rsEEG_simulation.m
-Test script for Rick Adams' model.
-
-### exp003_run_cmc_2017_modularized.m
+### 102_test_my_spm_fx_cmc_2017_modularized.m
 Tests the functionality of the synaptic gain modification.
 Plots the results.
 
-### exp004_synaptic_modulation.m
+### 103_test_Adams_model.m
+Test script for Rick Adams' model.
+
+# Old Pipeline
+works only for model `'all-excitatory'`
+1. `206_plot_model.m` - run the model for different synaptic gain values and create lookup tables.
+2. compute absolute and relative power (script based on which dataset is used):
+   - `208_abs_rel_power_data.py`
+   - `209_abs_rel_power_data.py`
+
+## Old scripts
+
+### 204_synaptic_modulation.m
 Load synaptic density data and run the model.
 
-### exp005_compare_EEG.py
-Plot model results (from `exp004_synaptic_modulation.m`) vs rsEEG data.
+### 205_compare_EEG.py
+Plot model results (from `204_synaptic_modulation.m`) vs rsEEG data.
 
-### exp006_plot_model.m
+### 206_plot_model.m
+-- old pipeline --\
 Run the model (`model='all-excitatory'`) for different synaptic gain values and create lookup table.\
 Plot and save the results.
 
-### exp007_plot_synGain_vs_relPower.py
+### 207_plot_synGain_vs_relPower.py
 -- outdated -- (fix reference to `model_simulation.txt`)\
 - Maps measured synaptic density to normalized range.
 - plot change in power depending on synaptic gain: model and measured data
 
-### exp008_abs_rel_power_data.py
-Compute absolute and relative power from model table (from `exp006_plot_model.m`).
+### 208_abs_rel_power_data.py
+-- old pipeline --\
+Compute absolute and relative power from model table (from `206_plot_model.m`).
 Save into file.\
 Based on data files:
 - `EEG_SynDens_v2_power_Measured_synDens_PSD95.txt`
@@ -85,19 +108,23 @@ Based on data files:
 - `EEG_SynDens_v2_power_Predicted_synDens_PSD95.txt`
 - `EEG_SynDens_v2_power_Predicted_synDens_SYN1_shank3.txt`
 
-### exp009_abs_rel_power_data.py
+### 209_abs_rel_power_data.py
+-- old pipeline --\
 Same but based on data files:
 - `Measured_Density_reprocessed.txt`
 - `Predicted_Density_reprocessed.txt`
 
 
-# Acknowledgements
-This work is inspired by Adams et al., 2022, Biological Psychiatry.\
-Many thanks to Rick Adams for sharing the code (we created an independent version with same results) and helping in resolving the following issue.
-
-### Issue with spm
-The default behaviour for `N.nodelay` undefined,
-changed in commit https://github.com/spm/spm/commit/30b2259b1223d7bce7906d484a3d69e8922618ac (spm_dcm_delay.m, line 112).
-In previous versions (including the one Adams et al. is based on) the default was `N.nodelay = 0;`.
+# Issue with spm
+The default behaviour in spm for `N.nodelay` is inconsistent between versions.
+It changed in commit https://github.com/spm/spm/commit/30b2259b1223d7bce7906d484a3d69e8922618ac (spm_dcm_delay.m, line 112).
+In previous versions (including the one Adams et al., 2022, is based on) the default was `N.nodelay = 0;`.
 In the latest spm version the default is `N.nodelay = 1;`.
 We set explicitly `N.nodelay = 0;` to get the old behaviour.
+
+# Acknowledgements
+This work is inspired by Adams et al. (2022), for which we created an independent version generating the same results.
+We thank Rick Adams for sharing the DCM code and helpful discussions.
+
+# References
+Adams, R.A., et al. Computational Modeling of Electroencephalography and Functional Magnetic Resonance Imaging Paradigms Indicates a Consistent Loss of Pyramidal Cell Synaptic Gain in Schizophrenia. Biol Psychiatry 91, 202-215 (2022).
