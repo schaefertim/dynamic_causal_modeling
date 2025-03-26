@@ -1,0 +1,3 @@
+Your data should be space-separated csv files containing at least two columns:
+- subject identifier
+- synaptic density
